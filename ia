@@ -1,0 +1,46 @@
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Simulacao de dados de entrada
+np.random.seed(0)
+tempo = np.arange(0, 100, 1)
+nivel_agua = 50 + np.random.normal(0, 5, size=tempo.shape)  # Nivel de agua com ruido
+
+# Criacao de um DataFrame
+dados = pd.DataFrame({'Tempo': tempo, 'Nivel_Agua': nivel_agua})
+
+# Modelo de regressao linear para prever o nivel de agua
+X = dados[['Tempo']]
+y = dados['Nivel_Agua']
+modelo = LinearRegression()
+modelo.fit(X, y)
+
+# Previsao do nivel de agua
+dados['Previsao'] = modelo.predict(X)
+
+# Visualizacao dos dados
+plt.figure(figsize=(10, 5))
+plt.plot(dados['Tempo'], dados['Nivel_Agua'], label='Nível de Água Real', color='blue')
+plt.plot(dados['Tempo'], dados['Previsao'], label='Previsão do Nível de Água', color='red', linestyle='--')
+plt.title('Simulacao do Regulador de Agua Destilada')
+plt.xlabel('Tempo')
+plt.ylabel('Nivel de Agua')
+plt.legend()
+plt.show()
+
+# Função para ajustar o nível de água
+def ajustar_nivel_agua(nivel_atual, meta):
+    if nivel_atual < meta:
+        return "Aumentar a produção de água"
+    elif nivel_atual > meta:
+        return "Reduzir a produção de água"
+    else:
+        return "Nível de água ideal"
+
+# Exemplo de uso da função
+nivel_atual = 52
+meta = 50
+acao = ajustar_nivel_agua(nivel_atual, meta)
+print(acao)
